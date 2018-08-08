@@ -56,6 +56,7 @@ class App extends Component {
     this.removeHandler = this.removeHandler.bind(this)
     this.deactiveHandeler = this.deactiveHandeler.bind(this)
     this.activeHandeler = this.activeHandeler.bind(this)
+    this.clearAllHandeler = this.clearAllHandeler.bind(this)
   }
  
   inputHandeler(e){
@@ -82,6 +83,7 @@ class App extends Component {
       deactiveFrnd: this.state.deactiveFrnd.concat([name])
     })
   }
+
   activeHandeler(name){
     this.setState({
       ...this.state,
@@ -96,7 +98,13 @@ class App extends Component {
       activeFrnd: this.state.activeFrnd.filter(item => item !== name )
     })
   }
-
+  clearAllHandeler(){
+    this.setState({
+      ...this.state,
+      activeFrnd: [],
+      deactiveFrnd: []
+    })
+  }
   render() {
     return (
       <div className="App">
@@ -105,6 +113,7 @@ class App extends Component {
             <input type="text" value={this.state.inputValue}  onChange={this.inputHandeler} />
             <button type="submit" className="btn tbn-default">Add Friend</button>
           </form>
+          <button onClick={this.clearAllHandeler}>ClearAll</button>
           <div>
               <ActiveFrndComp activeList = {this.state.activeFrnd}
                 removeFriend = {this.removeHandler}
