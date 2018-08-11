@@ -8,11 +8,11 @@ function ActiveFrndComp(props){
          <h1>Active Friend</h1>
         <ul>
           {
-            props.activeList.map((name,key) =>(
+            props.activeList.map((friend,key) =>(
               <li key={key}>
-                <span>{name}</span>
-                <button onClick={()=>props.deactiveFriend(name)}>Deactive</button>
-                <button onClick={()=>props.removeFriend(name)}>Remove</button>
+                <span>{friend.name}</span>
+                <button onClick={()=>props.deactiveFriend(friend.name)}>Deactive</button>
+                <button onClick={()=>props.removeFriend(friend.name)}>Remove</button>
               </li>
             ))
           }
@@ -22,7 +22,7 @@ function ActiveFrndComp(props){
 }
 
 function DeactiveFrndComp(props){
-  return(
+ /* return(
     <div>
          <h1>Deactive Friend</h1>
         <ul>
@@ -36,18 +36,26 @@ function DeactiveFrndComp(props){
           }
         </ul>
     </div>
-  )
+  )*/
 }
 
 class App extends Component {
   constructor(props){
     super(props)
     this.state= {
-      activeFrnd:[
-        'noman','abdulla'
-      ],
-      deactiveFrnd:[
-
+      friends:[
+       {
+         name: 'Jordyn',
+         active: true
+       },
+       {
+         name: 'Mikanzi',
+         active: true
+       },
+       {
+         name: 'Jovi',
+         active: true
+       }
       ],
       inputValue: ''
     }
@@ -70,10 +78,13 @@ class App extends Component {
     e.preventDefault();
     this.setState({
       ...this.state,
-      activeFrnd: this.state.activeFrnd.concat([this.state.inputValue]),
+      friends: this.state.friends.concat({
+        name: this.state.inputValue,
+        active: true
+      }),
       inputValue: ''
     })
-    console.log(this.state.activeFrnd)
+   // console.log(this.state.activeFrnd)
   }
  
   deactiveHandeler(name){
@@ -95,7 +106,7 @@ class App extends Component {
   removeHandler(name){
     this.setState({
       ...this.state,
-      activeFrnd: this.state.activeFrnd.filter(item => item !== name )
+      friends: this.state.friends.filter(item => item.name !== name )
     })
   }
   clearAllHandeler(){
@@ -115,12 +126,11 @@ class App extends Component {
           </form>
           <button onClick={this.clearAllHandeler}>ClearAll</button>
           <div>
-              <ActiveFrndComp activeList = {this.state.activeFrnd}
+              <ActiveFrndComp activeList = {this.state.friends}
                 removeFriend = {this.removeHandler}
                 deactiveFriend = {this.deactiveHandeler}
               />
-              <DeactiveFrndComp deactiveList = {this.state.deactiveFrnd}
-                activeFriend = {this.activeHandeler} />
+              
           </div>
         </div> 
       </div>
@@ -128,7 +138,8 @@ class App extends Component {
   }
 }
 
-
+/*<DeactiveFrndComp deactiveList = {this.state.deactiveFrnd}
+                activeFriend = {this.activeHandeler} />*/
 
 
 
