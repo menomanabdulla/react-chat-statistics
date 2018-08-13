@@ -22,21 +22,21 @@ function ActiveFrndComp(props){
 }
 
 function DeactiveFrndComp(props){
- /* return(
+return(
     <div>
          <h1>Deactive Friend</h1>
         <ul>
           {
-            props.deactiveList.map((name,key) =>(
+            props.deactiveList.map((friend,key) =>(
               <li key={key}>
-                <span>{name}</span>
-                <button onClick={()=>props.activeFriend(name)}>Active</button>
+                <span>{friend.name}</span>
+                <button onClick={()=>props.activeFriend(friend.name)}>Active</button>
               </li>
             ))
           }
         </ul>
     </div>
-  )*/
+  )
 }
 
 class App extends Component {
@@ -54,7 +54,7 @@ class App extends Component {
        },
        {
          name: 'Jovi',
-         active: true
+         active: false
        }
       ],
       inputValue: ''
@@ -112,8 +112,7 @@ class App extends Component {
   clearAllHandeler(){
     this.setState({
       ...this.state,
-      activeFrnd: [],
-      deactiveFrnd: []
+      friends: []
     })
   }
   render() {
@@ -126,11 +125,13 @@ class App extends Component {
           </form>
           <button onClick={this.clearAllHandeler}>ClearAll</button>
           <div>
-              <ActiveFrndComp activeList = {this.state.friends}
+              <ActiveFrndComp activeList = {this.state.friends.filter((friend)=> friend.active === true)}
                 removeFriend = {this.removeHandler}
                 deactiveFriend = {this.deactiveHandeler}
               />
               
+              <DeactiveFrndComp deactiveList = {this.state.friends.filter((friend)=>friend.active === false)}
+                              activeFriend = {this.activeHandeler} />
           </div>
         </div> 
       </div>
@@ -138,8 +139,6 @@ class App extends Component {
   }
 }
 
-/*<DeactiveFrndComp deactiveList = {this.state.deactiveFrnd}
-                activeFriend = {this.activeHandeler} />*/
 
 
 
