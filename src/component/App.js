@@ -2,6 +2,61 @@ import React, { Component } from 'react';
 import './App.css';
 
 
+window.API = {
+  fetchFriends(){
+    return new Promise ((res,rej)=>{
+      const friends = [
+        {
+          name: 'Jordyn',
+          active: true
+        },
+        {
+          name: 'Mikanzi',
+          active: true
+        },
+        {
+          name: 'Jovi',
+          active: false
+        }
+       ]
+       window.setTimeout(()=>res(friends),2000)
+    })
+  }
+}
+
+
+class Loading extends React.Component{
+  constructor(props){
+    super(props)
+    this.state = {
+      text : 'Loading'
+    }
+  }
+  componentDidMount(){
+    const stopper = this.state.text+'...'
+   this.interval =  window.setInterval(()=>{
+      this.state.text === stopper ?
+      this.setState({text: 'Loading'}):
+      this.setState((currentState)=>{
+        return({
+          text: currentState.text+'.'
+        })
+      })
+    }
+     ,300
+    )
+  }
+  componentWillUnmount(){
+    window.clearInterval(this.interval)
+  }
+  render(){
+    return(
+      <p>{this.state.text}</p>
+    )
+  }
+}
+
+
 function ActiveFrndComp(props){
   return(
     <div>
@@ -43,29 +98,42 @@ class App extends Component {
   constructor(props){
     super(props)
     this.state= {
-      friends:[
-       {
-         name: 'Jordyn',
-         active: true
-       },
-       {
-         name: 'Mikanzi',
-         active: true
-       },
-       {
-         name: 'Jovi',
-         active: false
-       }
-      ],
-      inputValue: ''
+      friends:[],
+      inputValue: '',
+      loading: true
     }
     this.inputHandeler = this.inputHandeler.bind(this)
     this.submitHandeler = this.submitHandeler.bind(this)
     this.removeHandler = this.removeHandler.bind(this)
     this.clearAllHandeler = this.clearAllHandeler.bind(this)
     this.toggleHandeler = this.toggleHandeler.bind(this)
+
+    console.log('------ hello from constructor -------')
   }
- 
+
+  componentDidMount(){
+    console.log('------- component-did-mount ----------')
+    window.API.fetchFriends()
+      .then((friends)=>{
+        this.setState({
+          ...this.state,
+          friends,
+          loading: false
+        })
+      })
+    
+  }
+  componentDidUpdate(){
+    console.log('------- component-will-unmount ----------')
+  }
+  componentWillUnmount(){
+    console.log('------- component did update ----------')
+  }
+  shouldComponentUpdate(){
+   // console.log('------- Should-Component-Update ----------')
+   return true
+  }
+
   inputHandeler(e){
     this.setState({
       ...this.state,
@@ -83,31 +151,11 @@ class App extends Component {
       }),
       inputValue: ''
     })
-   // console.log(this.state.activeFrnd)
-  }
- 
-  deactiveHandeler(name){
-    this.setState({
-      ...this.state,
-      activeFrnd: this.state.activeFrnd.filter(item => item !== name ),
-      deactiveFrnd: this.state.deactiveFrnd.concat([name])
-    })
-  }
-
-  activeHandeler(name){
-    this.setState({
-      ...this.state,
-      activeFrnd: this.state.activeFrnd.concat([name]),
-      deactiveFrnd:  this.state.deactiveFrnd.filter(item => item !== name )
-     
-    })
   }
 
   toggleHandeler(name){
     this.setState(currentState => {
       const friend = currentState.friends.find((friend)=> friend.name === name)
-      console.log(friend)
-      console.log(currentState.friends.filter((friend)=> friend.name !== name))
       return{
         friends: currentState.friends.filter((friend)=> friend.name !== name)
           .concat({
@@ -131,6 +179,11 @@ class App extends Component {
     })
   }
   render() {
+    if(this.state.loading){
+      return(
+        <Loading/>
+      )
+    }
     return (
       <div className="App">
         <div className='add-block'>
