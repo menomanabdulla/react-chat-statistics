@@ -22,7 +22,7 @@ function ActiveFrndComp(props){
 }
 
 function DeactiveFrndComp(props){
-return(
+  return(
     <div>
          <h1>Deactive Friend</h1>
         <ul>
@@ -62,9 +62,8 @@ class App extends Component {
     this.inputHandeler = this.inputHandeler.bind(this)
     this.submitHandeler = this.submitHandeler.bind(this)
     this.removeHandler = this.removeHandler.bind(this)
-    this.deactiveHandeler = this.deactiveHandeler.bind(this)
-    this.activeHandeler = this.activeHandeler.bind(this)
     this.clearAllHandeler = this.clearAllHandeler.bind(this)
+    this.toggleHandeler = this.toggleHandeler.bind(this)
   }
  
   inputHandeler(e){
@@ -103,6 +102,22 @@ class App extends Component {
      
     })
   }
+
+  toggleHandeler(name){
+    this.setState(currentState => {
+      const friend = currentState.friends.find((friend)=> friend.name === name)
+      console.log(friend)
+      console.log(currentState.friends.filter((friend)=> friend.name !== name))
+      return{
+        friends: currentState.friends.filter((friend)=> friend.name !== name)
+          .concat({
+            name,
+            active: !friend.active
+          })
+      }
+    })
+  }
+
   removeHandler(name){
     this.setState({
       ...this.state,
@@ -127,22 +142,16 @@ class App extends Component {
           <div>
               <ActiveFrndComp activeList = {this.state.friends.filter((friend)=> friend.active === true)}
                 removeFriend = {this.removeHandler}
-                deactiveFriend = {this.deactiveHandeler}
+                deactiveFriend = {this.toggleHandeler}
               />
               
               <DeactiveFrndComp deactiveList = {this.state.friends.filter((friend)=>friend.active === false)}
-                              activeFriend = {this.activeHandeler} />
+                              activeFriend = {this.toggleHandeler} />
           </div>
         </div> 
       </div>
     );
   }
 }
-
-
-
-
-
-
 
 export default App;
